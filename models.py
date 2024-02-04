@@ -39,27 +39,25 @@ class Cart:
 
 
     def remove_product(self, product: Product, remove_count=None):
-        """
-        Метод удаления продукта из корзины.
-        Если remove_count не передан, то удаляется вся позиция
-        Если remove_count больше, чем количество продуктов в позиции, то удаляется вся позиция
-        """
-        if remove_count > self.products[product]:
-            del self.products[product]
-        else:
+        if product in self.products:
+            if remove_count is None or self.products[product] <= remove_count:
+                del self.products[product]
+            else:
+                self.products[product] -= remove_count
 
-        raise NotImplementedError
 
     def clear(self):
-        raise NotImplementedError
+        self.products.clear()
 
     def get_total_price(self) -> float:
-        raise NotImplementedError
+        total = 0
+        for product, count in self.products.items():
+            total += product.price * count
+        return total
 
     def buy(self):
-        """
-        Метод покупки.
-        Учтите, что товаров может не хватать на складе.
-        В этом случае нужно выбросить исключение ValueError
-        """
-        raise NotImplementedError
+        for product, count in self.products.items():
+            if not product.check_quantity(count):
+                raise ValueError(f"Недостаточно количество товара {product.name} на складе")
+            product.buy(count)
+        self.clear()
