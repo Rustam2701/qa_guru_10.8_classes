@@ -1,18 +1,15 @@
+from dataclasses import dataclass
+
+
+@dataclass
 class Product:
     name: str
     price: float
     description: str
     quantity: int
 
-    def __init__(self, name, price, description, quantity):
-        self.name = name
-        self.price = price
-        self.description = description
-        self.quantity = quantity
-
     def check_quantity(self, quantity) -> bool:
         return self.quantity >= quantity
-
 
     def buy(self, quantity):
         if self.check_quantity(quantity):
@@ -25,7 +22,6 @@ class Product:
 
 
 class Cart:
-
     products: dict[Product, int]
 
     def __init__(self):
@@ -37,14 +33,12 @@ class Cart:
         else:
             self.products[product] = buy_count
 
-
     def remove_product(self, product: Product, remove_count=None):
         if product in self.products:
             if remove_count is None or self.products[product] <= remove_count:
                 del self.products[product]
             else:
                 self.products[product] -= remove_count
-
 
     def clear(self):
         self.products.clear()
